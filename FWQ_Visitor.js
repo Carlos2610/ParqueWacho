@@ -1,3 +1,5 @@
+const { text } = require("stream/consumers")
+
 const wsRegister = "ws://localhost:8080"
 var websocket
 
@@ -12,8 +14,18 @@ const connectWebSocket = () => {
     websocket.onclose = onClose
     websocket.onerror = onErr
     websocket.onmessage = onMessage
-    
-    
+
+    document.writeln("Conexion satisfactoria")
+}
+
+function recogerDatos(){
+    let nombre = document.getElementById("nombre").value;
+    let password = document.getElementById("password").value;
+
+    writeToScreen("Creando cliente " + nombre + " con constraseña: " + password);
+
+    websocket.send(nombre);
+    websocket.send(password);
 }
 
 /**Hay que tener en cuenta lo que haremos para cada funcion
