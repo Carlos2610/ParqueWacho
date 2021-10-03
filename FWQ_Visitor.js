@@ -1,31 +1,44 @@
-const { text } = require("stream/consumers")
-
 const wsRegister = "ws://localhost:8080"
-var websocket
 
+var websocket = new WebSocket(wsRegister);
+
+
+/*
 const init = () => { //esto es lo mismo que poner function init()
     connectWebSocket()
 }
 
 const connectWebSocket = () => {
-    websocket = new WebSocket(wsRegister);
     
     websocket.onopen = onOpen
     websocket.onclose = onClose
     websocket.onerror = onErr
     websocket.onmessage = onMessage
 
-    document.writeln("Conexion satisfactoria")
-}
+    
+}*/
+
+
 
 function recogerDatos(){
-    let nombre = document.getElementById("nombre").value;
-    let password = document.getElementById("password").value;
+    
+   
+    websocket.onmessage = onMessage;
+    websocket.onclose = onClose;
+    
+    let name = document.getElementById("nombre").value;
+    let pass = document.getElementById("password").value;
 
-    writeToScreen("Creando cliente " + nombre + " con constraseña: " + password);
-
-    websocket.send(nombre);
-    websocket.send(password);
+    let data = {
+        nombre: name,
+        password: pass
+    }
+    
+    document.writeln("Creando cliente " + data.nombre + " con constraseña: " + data.password)
+    
+    websocket.send(JSON.stringify(data));
+    
+    
 }
 
 /**Hay que tener en cuenta lo que haremos para cada funcion
@@ -34,10 +47,11 @@ function recogerDatos(){
  * algo al servidor para que meta a este usuario en la base de datos,
  * cuando se ciera en onClose, avisar que hay libre una plaza, etc
  */
+
 const onOpen = (event) =>{
     console.log("Conectado websocket")
-    websocket.send("Cliente activo")
 }
+websocket.onopen = onOpen;
 
 const onClose = (event) =>{
     console.log("Cerrado webSocket")
@@ -47,11 +61,12 @@ const onMessage = (event) =>{
     console.log("Mensaje; "+event.data);
     websocket.close()
 }
-
+/*
 const onErr = (event) =>{
     console.log("Error; "+event.data);
-}
+}*/
 
 //Asi hemos añadido un controlador al boton que al hacer click inicia el socket
-document.getElementById("but").addEventListener("click",init,false)
+document.getElementById("but").addEventListener("click",recogerDatos,false)
+
 
