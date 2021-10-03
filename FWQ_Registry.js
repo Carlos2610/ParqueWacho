@@ -1,6 +1,6 @@
-const net = require("net");
+
 const WebSocketServer = require('ws').Server
-const server = net.createServer()
+
 
 const puerto = 8080
 
@@ -11,8 +11,10 @@ console.log("Listening port: "+puerto+" Registring...")
 //desde el cliente
 wss.on('connection',(ws)=>{
     ws.on('message',(message)=>{
-        console.log("received:" + message);
-        ws.send(message)
+        var info = JSON.parse(message);
+        
+        console.log("received:"+info.nombre);
+        ws.send("Recibidos los parametros de inicio de sesion")
     })
     ws.on('close', ()=>{
         console.log("Comunicación finalizada")
