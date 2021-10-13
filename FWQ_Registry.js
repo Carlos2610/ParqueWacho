@@ -1,27 +1,24 @@
+const net = require('net');
 
-const WebSocketServer = require('ws').Server
+const server = net.createServer()
 
-
-const puerto = 8080
-
-wss = new WebSocketServer({port:puerto});
-console.log("Listening port: "+puerto+" Registring...")
-
-//Aqui controlamos lo que pasa cuando se conecta el socket 
-//desde el cliente
-wss.on('connection',(ws)=>{
-    ws.on('message',(message)=>{
-        var info = JSON.parse(message);
-        
-        console.log("received:"+info.nombre);
-        ws.send("Recibidos los parametros de inicio de sesion")
-    })
-    ws.on('close', ()=>{
-        console.log("Comunicación finalizada")
+server.on('connection',(socket)=>{
+    socket.on('data',(data)=>{
+        console.log("Cliente registrado")
+        socket.write("Registro completado")
     })
 
-    ws.send("Conectado")
+    socket.on('close',()=>{
+        console.log('Server closed')
+    })
+
+    socket.on('error',(err)=>{
+        console.log(err.message)
+    })
 })
 
 
+server.listen(4000, ()=>{
+    console.log("Atendiendo registros de usuarios...")
+})
 
